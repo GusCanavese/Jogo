@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include "raylib.h"
 
 
@@ -20,9 +21,6 @@ typedef struct{
 } Jogo;
 
 
-
-
-
 void InitGame(Jogo *g, Jogo *d){
     // tamanho janela 
     g->largura = 800;
@@ -37,19 +35,60 @@ void InitGame(Jogo *g, Jogo *d){
     // Inicializar o tamanho e a posição do quadrado AZUL
     d->quadrado.tam_x = 30;
     d->quadrado.tam_y = 30;
-    d->quadrado.posi_x = 400;
+    d->quadrado.posi_x = 500;
     d->quadrado.posi_y = 200;
 
 }
 
 int main()
 {
-    Jogo g, d;
+    int gameStart = 1;
+    char name[9];
+    Jogo g, d, jogo = {800, 600};
     Rectangle r = (Rectangle){100, 100, 500, 20}; // criacao do retangulo aqui (tem que mandar desenhar ele la em baixo) (DA PRA FAZER AS COLISOES ASSIM)
 
     InitGame(&g, &d); //INICIANDO OS PERSONAGENS
     InitWindow(g.largura, g.altura, "Jogo");
     SetTargetFPS(60);
+
+    while(gameStart == 1){
+        if (gameStart == 1){
+        BeginDrawing();
+        ClearBackground(GRAY);
+        DrawText("Bomberman", jogo.largura/2 - MeasureText("Bomberman", 40)/2, 50, 40, BLUE);
+        DrawText("nICK:", jogo.largura/2 - MeasureText("Digite seu nome:", 20)/2, jogo.altura/2 - 50, 20, WHITE);
+        DrawText(name, jogo.largura/2 - MeasureText(name, 40)/2, jogo.altura/2, 40, WHITE);
+
+        if (gameStart == 1){
+            DrawText("Press ENTER!", jogo.largura/2 - MeasureText("Press ENTER!", 20)/2, jogo.altura/2 + 50, 20, WHITE);
+        }
+
+        if (IsKeyPressed(KEY_BACKSPACE)){
+        int length = strlen(name);
+
+            if (length > 0){
+                name[length - 1] = '\0';
+            }
+        } else {
+            int key = GetKeyPressed();
+
+            if (key != -1 && strlen(name) < 255){
+                int length = strlen(name);
+                name[length] = (char)key;
+                name[length + 1] = '\0';
+            }
+                if (IsKeyPressed(KEY_ENTER)){
+                    gameStart = 0;
+                }
+        }
+    }
+    EndDrawing();
+}
+
+
+
+
+
 
 
     while (!WindowShouldClose())
