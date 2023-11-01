@@ -2,7 +2,7 @@
 #include "raylib.h"
 
 
-//]coordenadas do quadrado
+//coordenadas do quadrado
 typedef struct{
     double tam_x;
     double tam_y;
@@ -26,7 +26,7 @@ typedef struct{
 void InitGame(Jogo *g, Jogo *d){
     // tamanho janela 
     g->largura = 800;
-    g->altura = 400;
+    g->altura = 600;
 
     // Inicializar o tamanho e a posição do quadrado VERMELHO
     g->quadrado.tam_x = 30;
@@ -50,14 +50,13 @@ int main()
     InitGame(&g, &d); //INICIANDO OS PERSONAGENS
     InitWindow(g.largura, g.altura, "Jogo");
     SetTargetFPS(60);
+
+
     while (!WindowShouldClose())
     {
-
-
         //===============================================
         //MOVIMENTACAO QUADRADO AZUL
         //===============================================
-
         if (IsKeyDown(KEY_D))
         {
             d.quadrado.posi_x += 5;
@@ -84,6 +83,7 @@ int main()
                 d.quadrado.posi_y += 5;
             }
         }
+
         if (IsKeyDown(KEY_S))
         {
             d.quadrado.posi_y += 5;
@@ -92,14 +92,6 @@ int main()
                 d.quadrado.posi_y -= 5;
             }
         }
-
-
-
-
-
-
-
-
 
 
         //===============================================
@@ -131,6 +123,7 @@ int main()
                 g.quadrado.posi_y += 5;
             }
         }
+
         if (IsKeyDown(KEY_DOWN))
         {
             g.quadrado.posi_y += 5;
