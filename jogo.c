@@ -2,7 +2,6 @@
 #include <string.h>
 #include "raylib.h"
 
-
 //coordenadas do quadrado
 typedef struct{
     double tam_x;
@@ -11,7 +10,10 @@ typedef struct{
     double posi_y;
 } Quadrado;
 
-
+typedef struct{
+    int altura;
+    int largura;
+}Botao;
 
 //tamanho da janela e do quadrado
 typedef struct{
@@ -19,6 +21,10 @@ typedef struct{
     int altura;
     Quadrado quadrado;
 } Jogo;
+
+
+
+
 
 
 void InitGame(Jogo *g, Jogo *d){
@@ -42,48 +48,85 @@ void InitGame(Jogo *g, Jogo *d){
 
 int main()
 {
-    int gameStart = 1;
-    char name[9];
+    int gameStart = -1;
+    char nameJogador1[9];
+    // char nameJogador2[9];
     Jogo g, d, jogo = {800, 600};
     Rectangle r = (Rectangle){100, 100, 500, 20}; // criacao do retangulo aqui (tem que mandar desenhar ele la em baixo) (DA PRA FAZER AS COLISOES ASSIM)
+    Rectangle botaoSingleplayer = (Rectangle){jogo.largura/3, jogo.altura/3, jogo.largura/3, 50};
+    Rectangle botaoMultiplayer = (Rectangle){jogo.largura/3, jogo.altura/3 + 70, jogo.largura/3, 50};
+    Vector2 mousePosition = {0};
+    
+
 
     InitGame(&g, &d); //INICIANDO OS PERSONAGENS
     InitWindow(g.largura, g.altura, "Jogo");
     SetTargetFPS(60);
 
-    while(gameStart == 1){
-        if (gameStart == 1){
-        BeginDrawing();
-        ClearBackground(GRAY);
-        DrawText("Bomberman", jogo.largura/2 - MeasureText("Bomberman", 40)/2, 50, 40, BLUE);
-        DrawText("nICK:", jogo.largura/2 - MeasureText("Digite seu nome:", 20)/2, jogo.altura/2 - 50, 20, WHITE);
-        DrawText(name, jogo.largura/2 - MeasureText(name, 40)/2, jogo.altura/2, 40, WHITE);
 
-        if (gameStart == 1){
-            DrawText("Press ENTER!", jogo.largura/2 - MeasureText("Press ENTER!", 20)/2, jogo.altura/2 + 50, 20, WHITE);
-        }
 
-        if (IsKeyPressed(KEY_BACKSPACE)){
-        int length = strlen(name);
-
-            if (length > 0){
-                name[length - 1] = '\0';
-            }
-        } else {
-            int key = GetKeyPressed();
-
-            if (key != -1 && strlen(name) < 255){
-                int length = strlen(name);
-                name[length] = (char)key;
-                name[length + 1] = '\0';
-            }
-                if (IsKeyPressed(KEY_ENTER)){
-                    gameStart = 0;
+    // tela de menu
+    while (gameStart == -1){
+            if(gameStart == -1){
+            mousePosition = GetMousePosition();
+            Color corRetangulo1 = GRAY;
+            Color corRetangulo2 = WHITE;
+            BeginDrawing();
+            ClearBackground(BLUE);
+            if(CheckCollisionPointRec(mousePosition, botaoSingleplayer)){
+                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+                    corRetangulo1 = PINK;
+                    gameStart = 1;
                 }
+            };
+
+            if(CheckCollisionPointRec(mousePosition, botaoMultiplayer)){
+                if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)){
+                    corRetangulo2 = BLACK;
+                    gameStart = 2;
+                }
+            };
+            DrawRectangle(jogo.largura/3, jogo.altura/3, jogo.largura/3, 50, corRetangulo1);
+            DrawText("SinglePlayer", jogo.largura/3, jogo.altura/3, 20, PINK);
+            DrawRectangle(jogo.largura/3, jogo.altura/3 + 70, jogo.largura/3, 50, corRetangulo2);
+            DrawText("MultiPlayer", jogo.largura/3, jogo.altura/3 + 70, 20, BLACK);
+            EndDrawing();
         }
     }
-    EndDrawing();
-}
+
+
+    // tela para digitar o nome dos jogadores 
+
+
+        while(gameStart == 1){
+            if (gameStart == 1){
+                BeginDrawing();
+                ClearBackground(GRAY);
+                DrawText("Bomberman", jogo.largura/2 - MeasureText("Bomberman", 40)/2, 50, 40, BLUE);
+                DrawText("Nick:", jogo.largura/2 - MeasureText("Digite seu nome:", 20)/2, jogo.altura/2 - 50, 20, WHITE);
+                DrawText(nameJogador1, jogo.largura/2 - MeasureText(nameJogador1, 40)/2, jogo.altura/2, 40, WHITE);
+                DrawText("Press ENTER!", jogo.largura/2 - MeasureText("Press ENTER!", 20)/2, jogo.altura/2 + 50, 20, WHITE);
+                if (IsKeyPressed(KEY_BACKSPACE)){
+                int length = strlen(nameJogador1);
+                    if (length > 0){
+                        nameJogador1[length - 1] = '\0';
+                    }
+                } else {
+                    int key = GetKeyPressed();
+
+                    if (key != -1 && strlen(nameJogador1) < 255){
+                        int length = strlen(nameJogador1);
+                        nameJogador1[length] = (char)key;
+                        nameJogador1[length + 1] = '\0';
+                    }
+
+                    if (IsKeyPressed(KEY_ENTER)){
+                        gameStart = 0;
+                    }
+                }
+            }
+            EndDrawing();
+        }
 
 
 
@@ -91,8 +134,7 @@ int main()
 
 
 
-    while (!WindowShouldClose())
-    {
+    while (!WindowShouldClose()){
         //===============================================
         //MOVIMENTACAO QUADRADO AZUL
         //===============================================
