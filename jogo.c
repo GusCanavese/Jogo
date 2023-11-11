@@ -23,10 +23,6 @@ typedef struct{
 } Jogo;
 
 
-
-
-
-
 void InitGame(Jogo *g, Jogo *d){
     // tamanho janela 
     g->largura = 800;
@@ -232,7 +228,7 @@ int main()
         if (IsKeyDown(KEY_S))
         {
             d.quadrado.posi_y += 5;
-            if (d.quadrado.posi_y > 400 - 30 || CheckCollisionRecs(r, (Rectangle){d.quadrado.posi_x, d.quadrado.posi_y, d.quadrado.tam_x, d.quadrado.tam_y}))
+            if (d.quadrado.posi_y > 600 - 30 || CheckCollisionRecs(r, (Rectangle){d.quadrado.posi_x, d.quadrado.posi_y, d.quadrado.tam_x, d.quadrado.tam_y}))
             {
                 d.quadrado.posi_y -= 5;
             }
@@ -272,7 +268,7 @@ int main()
         if (IsKeyDown(KEY_DOWN))
         {
             g.quadrado.posi_y += 5;
-            if (g.quadrado.posi_y > 400 - 30 || CheckCollisionRecs(r, (Rectangle){g.quadrado.posi_x, g.quadrado.posi_y, g.quadrado.tam_x, g.quadrado.tam_y}))
+            if (g.quadrado.posi_y > 600 - 30 || CheckCollisionRecs(r, (Rectangle){g.quadrado.posi_x, g.quadrado.posi_y, g.quadrado.tam_x, g.quadrado.tam_y}))
             {
                 g.quadrado.posi_y -= 5;
             }
