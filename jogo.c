@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "raylib.h"
+#include <raylib.h>
 
 //coordenadas do quadrado
 typedef struct{
