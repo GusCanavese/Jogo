@@ -45,7 +45,7 @@ void InitGame(Jogo *g, Jogo *d){
     d->quadrado.posi_y = 200;
 
 }
-
+// essa mensagem é para um teste de commit
 int main()
 {
     int gameStart = -1;
