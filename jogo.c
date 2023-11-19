@@ -15,7 +15,7 @@ typedef struct{
    Color cor;
    int proxmap;
    int mapant;
-   int imagemteste,png;
+   int imagemteste;
 }Mapa;
 
 
@@ -39,6 +39,7 @@ typedef struct {
    double posi_y;
    int qtdBomas;
    int dropedBomb;
+   bool contador;
    Bomba bomba;
 } Heroi;
 
@@ -48,9 +49,10 @@ void persona (Heroi*g, Heroi *g2){
    g  -> posi_x = 330;
    g  -> posi_y = 200;
    g  -> qtdBomas = 4;
-   g  -> bomba.tamanho =50;
-   g  -> bomba.temporizador =3;
+   g  -> bomba.tamanho = 30;
+   g  -> bomba.temporizador = 3;
    g  -> dropedBomb=0;
+   g  -> contador = false;
    g2 -> tam_x  = 30;
    g2 -> tam_y  = 30;
    g2 -> posi_x = 400;
@@ -66,11 +68,12 @@ void Explosao(Heroi *p){
     tempo = GetTime();
     tempoPassado = tempo-tempoInicio;
     if (tempoPassado > p->bomba.temporizador){
-        DrawRectangle(p->bomba.posi_x, p->bomba.posi_y, (p->bomba.tamanho*2)+30, 30, RED);   
-        DrawRectangle(p->bomba.posi_x, p->bomba.posi_y, 30, (p->bomba.tamanho*2)+30, RED);
-        DrawRectangle(p->bomba.posi_x, p->bomba.posi_y, (p->bomba.tamanho*2)-30, 30, RED);   
-        DrawRectangle(p->bomba.posi_x, p->bomba.posi_y, 30, (p->bomba.tamanho*2)-30, RED);
-        p->qtdBomas--;
+        DrawRectangle(p->bomba.posi_x - 60, p->bomba.posi_y, (p->bomba.tamanho*2)+90, 30, RED);   
+        DrawRectangle(p->bomba.posi_x, p->bomba.posi_y - 60, 30, (p->bomba.tamanho*2)+90, RED);
+        if(tempoPassado > p->bomba.temporizador+1){
+            p->dropedBomb--;
+            p->qtdBomas++;
+        }
     }
 }
 
@@ -92,7 +95,7 @@ void UpdateGame(Heroi *p){
 
 void IniciaJogo (Heroi *p){
    ClearBackground(LIGHTGRAY);
-   DrawRectangle(p->posi_x, p->posi_y, 30, 30, GREEN );
+   DrawRectangle(p->posi_x, p->posi_y, 30, 30, BLUE );
    if(p->dropedBomb>0){
        criaBomba(&(*p));
        Explosao(&(*p));
@@ -230,7 +233,7 @@ int main(){
 
    BeginDrawing () ;
    ClearBackground (WHITE);
-   DrawRectangle (g.posi_x, g.posi_y, g.tam_x, g.tam_y, BLUE );
+//    DrawRectangle (g.posi_x, g.posi_y, g.tam_x, g.tam_y, BLUE );
    DrawRectangle (g2.posi_x, g2.posi_y, g2.tam_x, g2.tam_y, BLACK );
    DrawRectangleRec(r, RED);
    desmap(&geral);
