@@ -6,7 +6,8 @@
 #define TAMANHO_ALTURA_BOMBA = 30
 
 
-double tempo=0, tempoPassado=0, tempoInicio=0;
+double tempo1=0, tempoPassado1=0, tempoInicio1=0;
+double tempo2=0, tempoPassado2=0, tempoInicio2=0;
 
 //mapa
 typedef struct{
@@ -72,13 +73,26 @@ void criaBomba(Heroi *p){
     DrawRectangle(p->bomba.posi_x, p->bomba.posi_y, 30, 30, BLACK);
 }
 
-void Explosao(Heroi *p){
-    tempo = GetTime();
-    tempoPassado = tempo-tempoInicio;
-    if (tempoPassado > p->bomba.temporizador){
+void Explosao1(Heroi *p){
+    tempo1 = GetTime();
+    tempoPassado1 = tempo1-tempoInicio1;
+    if (tempoPassado1 > p->bomba.temporizador){
         DrawRectangle(p->bomba.posi_x - 60, p->bomba.posi_y, (p->bomba.tamanho*2)+90, 30, RED);   
         DrawRectangle(p->bomba.posi_x, p->bomba.posi_y - 60, 30, (p->bomba.tamanho*2)+90, RED);
-        if(tempoPassado > p->bomba.temporizador+1){
+        if(tempoPassado1 > p->bomba.temporizador+1){
+            p->dropedBomb--;
+            p->qtdBombas++;
+        }
+    }
+}
+
+void Explosao2(Heroi *p){
+    tempo2 = GetTime();
+    tempoPassado2 = tempo2-tempoInicio2;
+    if (tempoPassado2 > p->bomba.temporizador){
+        DrawRectangle(p->bomba.posi_x - 60, p->bomba.posi_y, (p->bomba.tamanho*2)+90, 30, RED);   
+        DrawRectangle(p->bomba.posi_x, p->bomba.posi_y - 60, 30, (p->bomba.tamanho*2)+90, RED);
+        if(tempoPassado2 > p->bomba.temporizador+1){
             p->dropedBomb--;
             p->qtdBombas++;
         }
@@ -88,7 +102,7 @@ void Explosao(Heroi *p){
 
 void UpdateGame(Heroi *p, Heroi *g){
     if(IsKeyDown(KEY_SPACE) && p->qtdBombas>0){
-        tempoInicio=GetTime();
+        tempoInicio1=GetTime();
         p->dropedBomb++;
         p->qtdBombas--;
         p->bomba.posi_x=p->posi_x;
@@ -100,7 +114,7 @@ void UpdateGame(Heroi *p, Heroi *g){
     if(p->posi_y>600 - 30) p->posi_y=600 - 30;
 
     if(IsKeyDown(KEY_RIGHT_CONTROL) && g->qtdBombas>0){
-        tempoInicio=GetTime();
+        tempoInicio2=GetTime();
         g->dropedBomb++;
         g->qtdBombas--;
         g->bomba.posi_x=g->posi_x;
@@ -126,7 +140,7 @@ void IniciaJogo1 (Heroi *p){
     DrawRectangleRec(retangulo_heroi(p), PURPLE);
     if(p->dropedBomb>0){
         criaBomba(&(*p));
-        Explosao(&(*p));
+        Explosao1(&(*p));
     }
 }
 
@@ -136,7 +150,7 @@ void IniciaJogo2 (Heroi *g){
     DrawRectangleRec(retangulo_heroi(g), WHITE);
     if(g->dropedBomb>0){
         criaBomba(&(*g));
-        Explosao(&(*g));
+        Explosao2(&(*g));
     }
 }
 
