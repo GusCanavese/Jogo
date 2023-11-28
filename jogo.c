@@ -27,7 +27,10 @@ typedef struct{
 }jogogeral;
 
 typedef struct {
-   int posi_x, posi_y, tamanho, temporizador;
+   int posi_x;
+   int posi_y; 
+   int tamanho;
+   int temporizador;
 }Bomba;
 
 
@@ -43,9 +46,17 @@ typedef struct {
 }Heroi;
 
 Rectangle retangulo_heroi(Heroi* g) {
-    Rectangle r= {g->posi_x, g->posi_y, g->tam_x, g->tam_y };
+    Rectangle r = {g->posi_x, g->posi_y, g->tam_x, g->tam_y };
     return r;
 }
+
+Rectangle retangulo_Bomba(Heroi* b) {
+    Rectangle rb = {b->bomba.posi_x, b->bomba.posi_y, 30, 30};
+    DrawRectangle(rb.x - 60, rb.y, (rb.width*2)+90, rb.height, RED);   
+    DrawRectangle(rb.x, rb.y - 60, rb.width, (rb.height*2)+90, RED);   
+    return rb;
+}
+
 
 void persona (Heroi*g, Heroi *g2){
    g  -> posi_x             = 30;
@@ -62,11 +73,11 @@ void persona (Heroi*g, Heroi *g2){
    g2 -> tam_y              = 30;
    g2 -> posi_x             = 400;
    g2 -> posi_y             = 210;
-   g2 -> qtdBombas         = 4;
-   g2 -> bomba.tamanho     = 30;
-   g2 -> bomba.temporizador= 3;
-   g2 -> dropedBomb        = 0;
-   g2 -> contador          = false;
+   g2 -> qtdBombas          = 4;
+   g2 -> bomba.tamanho      = 30;
+   g2 -> bomba.temporizador = 3;
+   g2 -> dropedBomb         = 0;
+   g2 -> contador           = false;
 }
 
 void criaBomba(Heroi *p){
@@ -77,8 +88,7 @@ void Explosao1(Heroi *p){
     tempo1 = GetTime();
     tempoPassado1 = tempo1-tempoInicio1;
     if (tempoPassado1 > p->bomba.temporizador){
-        DrawRectangle(p->bomba.posi_x - 60, p->bomba.posi_y, (p->bomba.tamanho*2)+90, 30, RED);   
-        DrawRectangle(p->bomba.posi_x, p->bomba.posi_y - 60, 30, (p->bomba.tamanho*2)+90, RED);
+        retangulo_Bomba(p);
         if(tempoPassado1 > p->bomba.temporizador+1){
             p->dropedBomb--;
             p->qtdBombas++;
@@ -90,8 +100,7 @@ void Explosao2(Heroi *p){
     tempo2 = GetTime();
     tempoPassado2 = tempo2-tempoInicio2;
     if (tempoPassado2 > p->bomba.temporizador){
-        DrawRectangle(p->bomba.posi_x - 60, p->bomba.posi_y, (p->bomba.tamanho*2)+90, 30, RED);   
-        DrawRectangle(p->bomba.posi_x, p->bomba.posi_y - 60, 30, (p->bomba.tamanho*2)+90, RED);
+        retangulo_Bomba(p);
         if(tempoPassado2 > p->bomba.temporizador+1){
             p->dropedBomb--;
             p->qtdBombas++;
@@ -174,18 +183,6 @@ void desmap(jogogeral *u, Heroi g, Heroi g2){
     }
 }
 
-/*void bordamapa(jogogeral *u){
-    u->atmap[0].barreira[0]=(Rectangle){0, 0, 800, 10}; //cima
-   u->atmap[0].barreira[1]=(Rectangle){0, 595, 800, 10}; //baixo
-   u->atmap[0].barreira[2]=(Rectangle){0, 0, 10, 600}; //esq
-   u->atmap[0].barreira[3]=(Rectangle){795, 0, 10, 600}; //dir
-}
-
-void desborda(jogogeral *u, Heroi g, Heroi g2){
-    for(int i=0; i<u->atmap[0].numbarre; i++){
-       DrawRectangleRec(u->atmap[0].barreira[i], BLACK);
-   }
-}*/
 
 int colisaoBarreira(jogogeral *u, Rectangle g){
     printf("rect: %lf %lf %lf %lf\n", g.x, g.y, g.width, g.height);
@@ -201,11 +198,21 @@ int colisaoBarreira(jogogeral *u, Rectangle g){
     return 0;
 }
 
+int colisaoBomba(jogogeral *u, Rectangle g){
+    for(int i=0; i< u->atmap[0].numbarre; i++){
+            if(CheckCollisionRecs(u->atmap[0].barreira[i], g)) {  
+                return 1;
+            }        
+        }
+    return 0;
+}
+
+
 
 
 int main(){
     int comco= -1;
-    Heroi g, g2;
+    Heroi g, g2, rb;
     jogogeral geral;
     geral.altura=600;
     geral.largura=800;
@@ -253,6 +260,11 @@ int main(){
         IniciaJogo2(&g2);
 
         //começo movimentação
+        if(colisaoBomba(&geral, retangulo_Bomba(&rb))){
+            rb.bomba.tamanho -= 90;
+            // rb.bomba.tamanho -= 90;
+        }
+
         if(IsKeyDown(KEY_RIGHT)){
             g.posi_x += 10;
             if(colisaoBarreira(&geral, retangulo_heroi(&g))) {
